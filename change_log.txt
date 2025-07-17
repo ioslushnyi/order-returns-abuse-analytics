@@ -1,0 +1,3 @@
+## Just a reference file with changes to help me track the decisions and changes
+
+16/07/2025 - day 1 - added approx repo structure, started working on fake data generation
