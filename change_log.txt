@@ -6,17 +6,6 @@
 
 
 
-
-steps to setup the project:
-python -m venv .venv
-.\.venv\Scripts\activate     
-pip install -r requirements.txt
-
-
-# build data:
-# cd datagenerator
-# python generate_all_data.py
-
 # Set project ID and region
 export PROJECT_ID="order-returns-abuse-detection"
 export REGION="us-central1"
@@ -38,10 +27,22 @@ gcloud services enable \
 # Create GCS bucket for data
 gsutil mb -l $REGION gs://$BUCKET_NAME/
 
-# Optional: create folders for raw/clean
-gsutil -m cp -r ./data/ gs://$BUCKET_NAME/raw/
-gsutil -m cp -r ./data/ gs://$BUCKET_NAME/clean/
-
 
 # Create BigQuery dataset
 bq --location=$REGION mk --dataset $PROJECT_ID:$BQ_DATASET
+
+steps to setup the project:
+python -m venv .venv
+.\.venv\Scripts\activate     
+pip install -r requirements.txt
+
+# Clone repo
+git clone https://github.com/ioslushnyi/order-returns-abuse-detection.git
+cd order-returns-abuse-detection
+
+# Optionaly (if ./data/*.csv is not in already in the repo) build data:
+# cd datagenerator
+# python generate_all_data.py
+
+# Optional: create folders for raw/clean
+gsutil -m cp -r ./data/ gs://$BUCKET_NAME/raw/
