@@ -3,7 +3,7 @@ import random
 from faker import Faker
 import time
 
-def generate_products(output_path="../data/products.csv"):
+def generate_products(n=1000, output_path="../data/products.csv"):
     start = time.time()
     fake = Faker()
     random.seed(42)
@@ -12,7 +12,7 @@ def generate_products(output_path="../data/products.csv"):
     brands = ["ACME", "Globex", "Initech", "Januszex", "Umbrella", "Wonka", "Soylent", "WayneTech", "StarkIndustries"]
 
     products = []
-    for i in range(1000):  # Increase to 10,000 for full scale
+    for i in range(n):  # Increase to 10,000 for full scale
         sku = f"SKU-{i:05}"
         category = random.choice(categories)
         brand = random.choice(brands)
@@ -30,7 +30,7 @@ def generate_products(output_path="../data/products.csv"):
         })
 
     df = pd.DataFrame(products)
-    df.to_csv("../data/products.csv", index=False)
+    df.to_csv(output_path, index=False)
     
     end = time.time()
     elapsed = end - start

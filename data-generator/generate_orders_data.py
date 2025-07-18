@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime, timedelta
 import time
 
-def generate_orders(users, products, output_path="../data/orders.csv"):
+def generate_orders(users, products, n=10000, output_path="../data/orders.csv"):
     start = time.time()
     random.seed(42)
 
@@ -20,7 +20,7 @@ def generate_orders(users, products, output_path="../data/orders.csv"):
 
     orders = []
 
-    for _ in range(100000):  # Increase to 2–5M for full scale
+    for _ in range(n):  # Increase to 2–5M for full scale
         user = random.choice(user_list)
         product = random.choice(product_list)
         quantity = random.randint(1, 5)
@@ -40,7 +40,7 @@ def generate_orders(users, products, output_path="../data/orders.csv"):
         })
 
     df = pd.DataFrame(orders)
-    df.to_csv("../data/orders.csv", index=False)
+    df.to_csv(output_path, index=False)
     
     end = time.time()
     elapsed = end - start

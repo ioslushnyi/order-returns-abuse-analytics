@@ -4,7 +4,7 @@ import pandas as pd
 import random
 import time
 
-def generate_users(n=50000, output_path="../data/users.csv"):
+def generate_users(n=500, output_path="../data/users.csv"):
     start = time.time()
     fake = Faker()
     random.seed(42)
@@ -12,7 +12,7 @@ def generate_users(n=50000, output_path="../data/users.csv"):
     tiers = ["Starter", "Bronze", "Silver", "Gold", "Platinum"]
 
     users = []
-    for _ in range(5000):
+    for _ in range(n):
         users.append({
             "user_id": str(uuid.uuid4()),
             "signup_date": fake.date_between(start_date="-5y", end_date="today"),

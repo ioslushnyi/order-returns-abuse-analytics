@@ -4,7 +4,7 @@ import uuid
 from datetime import timedelta
 import time
 
-def generate_returns(orders, users, products, output_path="../data/returns.csv"):
+def generate_returns(orders, users, products, duplicates=1000, output_path="../data/returns.csv"):
     start = time.time()
     random.seed(42)
 
@@ -57,10 +57,10 @@ def generate_returns(orders, users, products, output_path="../data/returns.csv")
         })
 
     # Add 1,000 dirty duplicates
-    returns += random.sample(returns, 1000)
+    returns += random.sample(returns, duplicates)
 
     df = pd.DataFrame(returns)
-    df.to_csv("../data/returns.csv", index=False)
+    df.to_csv(output_path, index=False)
 
     print(f"Generated {len(df)} returns with {len(abusive_users)} abusive users and {len(high_return_skus)} high-return SKUs.")
 
