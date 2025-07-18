@@ -1,3 +1,47 @@
 ## Just a reference file with changes to help me track the decisions and changes
 
 16/07/2025 - day 1 - added approx repo structure, started working on fake data generation
+18/07/2025 - day 2 - ran spark job locally, created parquete files. next step is to run job on data proc
+
+
+
+
+
+steps to setup the project:
+python -m venv .venv
+.\.venv\Scripts\activate     
+pip install -r requirements.txt
+
+
+# build data:
+# cd datagenerator
+# python generate_all_data.py
+
+# Set project ID and region
+export PROJECT_ID="order-returns-abuse-detection"
+export REGION="us-central1"
+export BUCKET_NAME="order-returns-data"
+export BQ_DATASET="order_returns"
+
+# Set project
+gcloud config set project $PROJECT_ID
+
+# Enable required APIs
+gcloud services enable \
+  bigquery.googleapis.com \
+  composer.googleapis.com \
+  storage.googleapis.com \
+  dataproc.googleapis.com \
+  cloudbuild.googleapis.com \
+  cloudfunctions.googleapis.com
+
+# Create GCS bucket for data
+gsutil mb -l $REGION gs://$BUCKET_NAME/
+
+# Optional: create folders for raw/clean
+gsutil -m cp -r ./data/ gs://$BUCKET_NAME/raw/
+gsutil -m cp -r ./data/ gs://$BUCKET_NAME/clean/
+
+
+# Create BigQuery dataset
+bq --location=$REGION mk --dataset $PROJECT_ID:$BQ_DATASET
