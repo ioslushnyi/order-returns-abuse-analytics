@@ -2,6 +2,16 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, lower, trim, when, to_date, datediff
 from pyspark.sql.types import DateType
 import argparse
+import os
+
+# ! FOR LOCAL EXECUTION, REMOVE FOR DATAPROC !
+# os.environ["PYSPARK_PYTHON"] = os.path.abspath(".venv/Scripts/python.exe")
+# os.environ["PYSPARK_DRIVER_PYTHON"] = os.path.abspath(".venv/Scripts/python.exe")
+# os.environ["HADOOP_HOME"] = "C:/hadoop"
+
+returns_path = "gs://returns-fraud-data/raw/returns.csv"
+orders_path = "gs://returns-fraud-data/raw/orders.csv"
+output_path = "gs://returns-fraud-data/clean/returns/"
 
 returns_path = "../data/returns.csv"
 orders_path = "../data/orders.csv"
@@ -13,14 +23,12 @@ parser.add_argument("--input_format", choices=["csv", "parquet"], default="csv")
 parser.add_argument("--output_path", default=output_path)
 args = parser.parse_args()
 
-returns_path = "gs://returns-fraud-data/raw/returns.csv"
-orders_path = "gs://returns-fraud-data/raw/orders.csv"
-output_path = "gs://returns-fraud-data/clean/returns/"
-
 # Init spark
 spark = SparkSession.builder \
     .appName("Clean Returns Data") \
     .getOrCreate()
+
+print(f"Spark Version: {spark.version}")
 
 # Load returns data
 if args.input_format == "csv":
@@ -64,5 +72,5 @@ df_deduped.write \
     .partitionBy("return_reason") \
     .parquet(output_path)
 
-print("✅ Cleaned returns data written to GCS in Parquet format.")
+print(f"Cleaned returns data written to: {output_path}")
 spark.stop()
