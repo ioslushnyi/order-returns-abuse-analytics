@@ -47,13 +47,16 @@ def generate_returns(orders, users, products, duplicates=1000, output_path="../d
         return_days = random.randint(1, 3) if is_abuser else random.randint(5, 30)
         reason = random.choice(abusive_reasons if is_abuser else normal_reasons)
 
+        is_fraud = int(is_abuser and (reason in abusive_reasons or return_days <= 3))
+
         returns.append({
             "return_id": str(uuid.uuid4()),
             "order_id": order.order_id,
             "user_id": order.user_id,
             "sku": order.sku,
             "return_reason": reason,
-            "return_date": order_date + timedelta(days=return_days)
+            "return_date": order_date + timedelta(days=return_days),
+            "is_fraud": is_fraud,
         })
 
     # Add 1,000 dirty duplicates
@@ -62,7 +65,7 @@ def generate_returns(orders, users, products, duplicates=1000, output_path="../d
     df = pd.DataFrame(returns)
     df.to_csv(output_path, index=False)
 
-    print(f"Generated {len(df)} returns with {len(abusive_users)} abusive users and {len(high_return_skus)} high-return SKUs.")
+    print(f"Generated {len(df)} returns with {len(abusive_users)} abusive users and {len(high_return_skus)} high-return SKUs and with {sum(df['is_fraud'])} labeled as fraud.")
 
     end = time.time()
     elapsed = end - start

@@ -32,13 +32,16 @@ gsutil mb -l $REGION gs://$BUCKET_NAME/
 bq --location=$REGION mk --dataset $PROJECT_ID:$BQ_DATASET
 
 steps to setup the project:
-python -m venv .venv
-.\.venv\Scripts\activate     
-pip install -r requirements.txt
 
 # Clone repo
 git clone https://github.com/ioslushnyi/order-returns-abuse-detection.git
 cd order-returns-abuse-detection
+
+#setup virtual environment:
+python -m venv .venv
+.\.venv\Scripts\activate
+#install dependenciesL
+pip install -r requirements.txt
 
 # Optionaly (if ./data/*.csv is not in already in the repo) build data:
 # cd datagenerator
@@ -67,9 +70,9 @@ bq query --nouse_legacy_sql   "SELECT return_reason, COUNT(*) as cnt FROM order_
 # --- OPTIONAL HELP FOR REFERENCE ---
 # Delete the old parquete files on GCS
 gsutil -m rm -r gs://order-returns-data/clean/clean_returns/
-# Create again
+# Create & upload again
 gsutil -m cp -r ./data/clean_returns/ gs://$BUCKET_NAME/clean/
-# Delete the broken table
+# Delete the old/broken table
 bq rm -t order_returns.cleaned_returns
 # version if partitioning WAS USED when running spark cleaning job
 bq load \
@@ -80,3 +83,13 @@ bq load \
   order_returns.cleaned_returns \
   'gs://order-returns-data/clean/clean_returns/*.parquet'
 # --- OPTIONAL HELP FOR REFERENCE ---
+
+
+# --- DBT ---
+# After sample data is generated, clean via spark job, uploaded to GCS as parquet and then to BQ, setup dbt in the project:
+# init dbt
+cd dbt
+dbt init order_returns_analytics
+
+# Authenticate with BigQuery (use Oauth or service account)
+dbt debug

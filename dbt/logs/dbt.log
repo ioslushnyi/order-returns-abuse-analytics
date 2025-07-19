@@ -1,0 +1,30 @@
+[0m19:35:05.664583 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002762C432900>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002762A2747D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002762E56BED0>]}
+
+
+============================== 19:35:05.671653 | 1e9d8ced-cf9b-4cb5-b2c4-c15d80e46625 ==============================
+[0m19:35:05.671653 [info ] [MainThread]: Running with dbt=1.10.4
+[0m19:35:05.672373 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': 'C:\\Users\\slush\\.dbt', 'fail_fast': 'False', 'version_check': 'True', 'log_path': 'logs', 'warn_error': 'None', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'quiet': 'False', 'no_print': 'None', 'log_format': 'default', 'introspect': 'True', 'static_parser': 'True', 'invocation_command': 'dbt init order_returns_analytics', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'send_anonymous_usage_stats': 'True'}
+[0m19:35:05.692195 [info ] [MainThread]: Creating dbt configuration folder at C:\Users\slush\.dbt
+[0m19:35:05.694718 [debug] [MainThread]: Starter project path: C:\Users\slush\AppData\Local\Programs\Python\Python313\Lib\site-packages\dbt\include\starter_project
+[0m19:35:05.718261 [info ] [MainThread]: 
+Your new dbt project "order_returns_analytics" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m19:35:05.719010 [info ] [MainThread]: Setting up your profile.
+[0m19:42:13.099112 [info ] [MainThread]: Profile order_returns_analytics written to C:\Users\slush\.dbt\profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m19:42:13.108827 [debug] [MainThread]: Command `dbt init` succeeded at 19:42:13.108424 after 427.57 seconds
+[0m19:42:13.110285 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000276520B7100>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002765211CEF0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000276520E88D0>]}
+[0m19:42:13.110938 [debug] [MainThread]: Flushing usage events
+[0m19:42:13.860670 [debug] [MainThread]: An error was encountered while trying to flush usage events
