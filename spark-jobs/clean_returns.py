@@ -9,13 +9,15 @@ import os
 # os.environ["PYSPARK_DRIVER_PYTHON"] = os.path.abspath(".venv/Scripts/python.exe")
 # os.environ["HADOOP_HOME"] = "C:/hadoop"
 
-returns_path = "gs://returns-fraud-data/raw/returns.csv"
-orders_path = "gs://returns-fraud-data/raw/orders.csv"
-output_path = "gs://returns-fraud-data/clean/returns/"
+returns_path    = "gs://returns-fraud-data/raw/returns.csv"
+orders_path     = "gs://returns-fraud-data/raw/orders.csv"
+products_path   = "gs://returns-fraud-data/raw//products.csv"
+output_path     = "gs://returns-fraud-data/clean/returns/"
 
-returns_path = "../data/returns.csv"
-orders_path = "../data/orders.csv"
-output_path = "../data/clean_returns/"
+returns_path    = "../data/returns.csv"
+orders_path     = "../data/orders.csv"
+products_path   = "../data/products.csv"
+output_path     = "../data/clean_returns/"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_format", choices=["csv", "parquet"], default="csv")
@@ -52,24 +54,31 @@ df_cleaned = df.withColumn(
 # Convert return_date to date type (check if already in date format later)
 df_cleaned = df_cleaned.withColumn("return_date", to_date(col("return_date")))
 
-# Join orders to calculate return_days
+# Load orders data
 orders_df = spark.read \
     .option("header", "true") \
     .option("inferSchema", "true") \
     .csv(orders_path) \
     .withColumn("order_date", to_date(col("order_date")))
 
-# Calculate return_days
+# Join orders to get order_date
 df_joined = df_cleaned.join(orders_df.select("order_id", "order_date"), on="order_id", how="left")
+
+# Calculate return_days
 df_joined = df_joined.withColumn("return_days", datediff(col("return_date"), col("order_date")))
 
+# Load products data
+df_products = spark.read.option("header", "true").option("inferSchema", "true").csv(products_path)
+
+# Join with products to get additional product info
+df_final = df_joined.join(df_products.select("sku", "category", "brand", "launch_date"), on="sku", how="left")
+
 # Remove duplicates
-df_deduped = df_joined.dropDuplicates(["order_id", "return_date"])
+df_deduped = df_final.dropDuplicates(["order_id", "return_date"])
 
 # Output to Parquet in GCS (partitioned by return_reason)
-df_deduped.write \
+df_final.write \
     .mode("overwrite") \
-    .partitionBy("return_reason") \
     .parquet(output_path)
 
 print(f"Cleaned returns data written to: {output_path}")

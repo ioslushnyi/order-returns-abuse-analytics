@@ -44,5 +44,39 @@ cd order-returns-abuse-detection
 # cd datagenerator
 # python generate_all_data.py
 
-# Optional: create folders for raw/clean
-gsutil -m cp -r ./data/ gs://$BUCKET_NAME/raw/
+# Optional: create folders for raw
+gsutil -m cp -r ./data/*.csv gs://$BUCKET_NAME/raw/
+
+# Optional: run spark job locally
+cd spark-jobs
+python clean_returns.py
+cd ..
+
+# Optional: create folders for clean
+gsutil -m cp -r ./data/clean_returns/ gs://$BUCKET_NAME/clean/
+
+# Create BigQuery table (schema inferred from Parquet)
+# version if partitioning was not used when running spark cleaning job
+bq load --source_format=PARQUET 
+  --autodetect 
+  order_returns.cleaned_returns 
+  gs://BUCKET_NAME/clean/clean_returns/*.parquet
+# test
+bq query --nouse_legacy_sql   "SELECT return_reason, COUNT(*) as cnt FROM order_returns.cleaned_returns GROUP BY return_reason"
+
+# --- OPTIONAL HELP FOR REFERENCE ---
+# Delete the old parquete files on GCS
+gsutil -m rm -r gs://order-returns-data/clean/clean_returns/
+# Create again
+gsutil -m cp -r ./data/clean_returns/ gs://$BUCKET_NAME/clean/
+# Delete the broken table
+bq rm -t order_returns.cleaned_returns
+# version if partitioning WAS USED when running spark cleaning job
+bq load \
+  --source_format=PARQUET \
+  --autodetect \
+  --hive_partitioning_mode=AUTO \
+  --hive_partitioning_source_uri_prefix=gs://order-returns-data/clean/clean_returns/ \
+  order_returns.cleaned_returns \
+  'gs://order-returns-data/clean/clean_returns/*.parquet'
+# --- OPTIONAL HELP FOR REFERENCE ---
