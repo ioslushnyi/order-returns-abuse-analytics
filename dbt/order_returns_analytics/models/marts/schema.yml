@@ -1,0 +1,98 @@
+version: 2
+
+models:
+  - name: fct_fraud_summary
+    description: >
+      One-row KPI table summarizing overall fraud activity across all returns.
+
+    columns:
+      - name: total_returns
+        description: Total number of returns in the dataset
+
+      - name: total_frauds
+        description: Number of returns labeled as fraud
+
+      - name: fraud_rate
+        description: Proportion of all returns that were fraudulent
+
+  - name: fct_fraud_flags
+    description: >
+      Enriched return records joined with user and SKU fraud metrics. 
+      Useful for dashboarding and fraud pattern detection.
+
+    columns:
+      - name: return_id
+        description: Unique identifier for the return
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: User associated with the return
+
+      - name: sku
+        description: SKU associated with the return
+
+      - name: return_date
+        description: Date the return was initiated
+
+      - name: return_reason
+        description: Reason given for the return
+
+      - name: return_condition
+        description: Product condition reported at return time
+
+      - name: refund_amount
+        description: Amount refunded to the user for the return
+
+      - name: is_fraud
+        description: Fraud label for the return
+
+      - name: user_total_returns
+        description: Number of total returns by the user
+
+      - name: user_fraud_ratio
+        description: Historical fraud ratio of the user
+
+      - name: sku_fraud_ratio
+        description: Historical fraud ratio of the SKU
+
+  - name: fct_refund_loss_summary
+    description: >
+      Aggregated financial loss summary from confirmed fraudulent returns.
+
+    columns:
+      - name: total_refund_loss
+        description: Total refund value lost to fraud
+
+      - name: total_refunded
+        description: Total refund amount across all returns
+
+      - name: refund_loss_rate
+        description: Percentage of refunds that were fraudulent
+
+  - name: dim_top_users
+    description: >
+      Top 50 users ranked by fraud ratio, enriched with risk level labels
+      for use in dashboards, drilldowns, and fraud investigation filtering.
+
+    columns:
+      - name: user_id
+        description: Unique user ID
+        tests:
+          - not_null
+
+      - name: total_returns
+        description: Total returns made by the user
+
+      - name: fraudulent_returns
+        description: Total returns labeled as fraudulent
+
+      - name: fraud_ratio
+        description: Proportion of returns that were fraudulent
+
+      - name: fraud_rank
+        description: Ranking of the user by fraud ratio and volume
+
+      - name: risk_level
+        description: Categorical risk label - high, medium, low, or no fraud

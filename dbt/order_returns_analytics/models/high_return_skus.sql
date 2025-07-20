@@ -5,7 +5,7 @@ WITH sku_aggregates AS (
     sku,
     COUNT(*) AS total_returns,
     COUNTIF(is_fraud = TRUE) AS fraudulent_returns
-  FROM {{ ref('returns_base') }}
+  FROM {{ ref('stg_returns') }}
   GROUP BY sku
 )
 

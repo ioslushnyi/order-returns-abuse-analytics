@@ -25,4 +25,4 @@ generate_returns(orders, users, products, duplicates=1000)
 
 end = time.time()
 elapsed = end - start
-print(f"All data generated. Elapsed time: {elapsed:.2f} seconds")
+print(f"All data generated. Total elapsed time: {elapsed:.2f} seconds")

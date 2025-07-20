@@ -29,7 +29,12 @@ clean-targets: # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   order_returns_analytics:
-    +materialized: view
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: view
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: view

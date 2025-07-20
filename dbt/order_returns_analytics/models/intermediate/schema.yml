@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: int_user_returns
+    description: >
+      Aggregates return activity at the user level. 
+      Includes total return count, fraud count, and fraud ratio.
+
+    columns:
+      - name: user_id
+        description: Unique identifier for the user
+        tests:
+          - not_null
+
+      - name: total_returns
+        description: Total number of returns made by the user
+
+      - name: fraudulent_returns
+        description: Number of returns labeled as fraudulent
+
+      - name: fraud_ratio
+        description: Proportion of the user's returns that were fraudulent
+
+  - name: int_sku_returns
+    description: >
+      Aggregates return and fraud activity at the SKU level.
+
+    columns:
+      - name: sku
+        description: Product SKU
+        tests:
+          - not_null
+
+      - name: total_returns
+        description: Total number of returns for this SKU
+
+      - name: fraudulent_returns
+        description: Number of fraudulent returns for this SKU
+
+      - name: fraud_ratio
+        description: Proportion of returns for this SKU that were fraudulent
+
+  - name: int_monthly_returns
+    description: >
+      Time-series model summarizing total and fraudulent returns per day.
+
+    columns:
+      - name: return_month
+        description: Date/month on which the return was initiated
+        tests:
+          - not_null
+
+      - name: total_returns
+        description: Number of returns on this month
+
+      - name: fraudulent_returns
+        description: Number of fraudulent returns on this month
+
+      - name: fraud_rate
+        description: Proportion of returns that were fraudulent on this month
+
+  - name: int_fraud_by_reason
+    description: >
+      Return-level aggregation by return_reason, showing fraud frequency and ratio.
+
+    columns:
+      - name: return_reason
+        description: Reason for return
+
+      - name: total_returns
+        description: Total number of returns with this reason
+
+      - name: fraudulent_returns
+        description: Number of fraudulent returns for this reason
+
+      - name: fraud_rate
+        description: Proportion of returns for this reason that were fraudulent
+
+  - name: int_user_fraud_trend
+    description: >
+      Monthly time-series of user-level return and fraud activity.
+
+    columns:
+      - name: user_id
+        description: Unique user identifier
+
+      - name: return_month
+        description: Return month (truncated to month)
+
+      - name: total_returns
+        description: Number of returns by the user that month
+
+      - name: fraudulent_returns
+        description: Number of returns labeled as fraud that month
+
+      - name: fraud_ratio
+        description: Proportion of fraudulent returns that month
+
+  - name: int_users_with_rising_fraud
+    description: >
+      Filters users with a rising fraud trend based on monthly fraud ratios.
+
+    columns:
+      - name: user_id
+        description: Unique identifier for the user
+
+      - name: return_month
+        description: Month of the return activity
+
+      - name: fraud_ratio
+        description: Monthly fraud ratio for the user
+
+      - name: delta
+        description: Change in fraud ratio compared to previous month

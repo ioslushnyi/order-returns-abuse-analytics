@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_returns
+    description: >
+      Staging model for return records from the cleaned Parquet data in BigQuery.
+      This model provides standardized field types and naming for downstream use
+      in fraud detection and behavioral analytics.
+
+    columns:
+      - name: return_id
+        description: Unique identifier for the return event
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: ID of the original order associated with the return
+        tests:
+          - not_null
+
+      - name: user_id
+        description: Unique identifier for the user who made the return
+        tests:
+          - not_null
+
+      - name: sku
+        description: Stock Keeping Unit (SKU) of the returned product
+        tests:
+          - not_null
+
+      - name: category
+        description: Product category (e.g. electronics, apparel, etc.)
+
+      - name: brand
+        description: Brand of the returned product
+
+      - name: launch_date
+        description: Date when the product was first launched
+
+      - name: order_date
+        description: Date when the original order was placed
+
+      - name: return_date
+        description: Date when the return was initiated
+
+      - name: return_days
+        description: Number of days between order_date and return_date
+        tests:
+          - not_null
+
+      - name: return_reason
+        description: Reason provided by the user for returning the product
+
+      - name: return_condition
+        description: Condition of the product at the time of return (e.g. new, used, damaged)
+
+      - name: refund_amount
+        description: Amount refunded to the user for the return
+        tests:
+          - not_null
+
+      - name: is_fraud
+        description: Boolean flag indicating whether the return was fraudulent
+        tests:
+          - not_null
