@@ -7,3 +7,9 @@ data/clean_returns/
 
 # But allow sample CSVs
 !data/sample_*.csv
+
+# dbt project files
+dbt/logs/
+dbt/target/
+dbt/manifest.json
+dbt/run_results.json

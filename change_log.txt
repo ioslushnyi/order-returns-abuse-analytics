@@ -2,13 +2,14 @@
 
 16/07/2025 - day 1 - added approx repo structure, started working on fake data generation
 18/07/2025 - day 2 - ran spark job locally, created parquete files. next step is to run job on data proc
+19/07/2025 - day 3 - set up dbt project, added basic models
 
 
 
 
 # Set project ID and region
 export PROJECT_ID="order-returns-abuse-detection"
-export REGION="us-central1"
+export REGION="US"
 export BUCKET_NAME="order-returns-data"
 export BQ_DATASET="order_returns"
 
