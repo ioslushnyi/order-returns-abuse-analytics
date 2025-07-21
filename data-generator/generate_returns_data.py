@@ -34,13 +34,13 @@ def generate_returns(orders, users, products, duplicates=1000, output_path="../d
 
         # Probability of return based on user type and SKU type
         if is_abuser and is_high_return_sku:
-            return_probability = 0.8
+            return_probability = 0.9
         elif is_abuser:
-            return_probability = 0.5
+            return_probability = 0.7
         elif is_high_return_sku:
-            return_probability = 0.5
+            return_probability = 0.7
         else:
-            return_probability = 0.2
+            return_probability = 0.3
         
         # Randomly decide to skip some returns to simulate realistic data
         if random.random() > return_probability:
@@ -64,9 +64,9 @@ def generate_returns(orders, users, products, duplicates=1000, output_path="../d
         if return_days <= 3:
             fraud_probability += 0.2
         if return_reason in abusive_return_reasons:
-            fraud_probability += 0.2
-        if return_condition in abusive_return_conditions:
             fraud_probability += 0.1
+        if return_condition in abusive_return_conditions:
+            fraud_probability += 0.2
         if not is_abuser:
             fraud_probability = min(fraud_probability, 0.1)  # False positives for normal users
 
